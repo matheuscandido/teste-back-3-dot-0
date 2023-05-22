@@ -15,8 +15,10 @@ type transactionHandler struct {
 	transactionsUseCase usecases.TransactionUseCase
 }
 
-func NewTransactionHandler() TransactionHandler {
-	return &transactionHandler{}
+func NewTransactionHandler(transactionUseCase usecases.TransactionUseCase) TransactionHandler {
+	return &transactionHandler{
+		transactionsUseCase: transactionUseCase,
+	}
 }
 
 func (h *transactionHandler) CreateTransaction(c *gin.Context) {
