@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"mcandido.com/teste-pismo/internal/dto"
 	"mcandido.com/teste-pismo/internal/usecases"
 )
 
@@ -24,10 +26,23 @@ func NewAccountsHandler(accountsUseCase usecases.AccountUseCase) AccountsHandler
 }
 
 func (h *accountsHandler) CreateAccount(c *gin.Context) {
-	// get json data here
-	docNumber := "123"
+	var accountBody dto.CreateAccountRequest
+	if err := c.ShouldBindJSON(&accountBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request payload",
+		})
+		return
+	}
 
-	account, err := h.accountsUseCase.CreateAccount(docNumber)
+	if err := validator.New().Struct(accountBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  "Invalid request body",
+			"fields": err.(validator.ValidationErrors),
+		})
+		return
+	}
+
+	account, err := h.accountsUseCase.CreateAccount(accountBody.DocumentNumber)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create account",

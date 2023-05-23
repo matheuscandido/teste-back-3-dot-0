@@ -1,8 +1,8 @@
 package entities
 
 type Account struct {
-	AccountID      int
-	DocumentNumber string
+	AccountID      int    `json:"account_id,omitempty"`
+	DocumentNumber string `json:"document_number,omitempty"`
 }
 
 type OperationType struct {
