@@ -40,7 +40,7 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	transaction, err := h.transactionsUseCase.CreateTransaction(transactionBody.AccountID, transactionBody.OperationTypeID, transactionBody.Amount)
+	err := h.transactionsUseCase.CreateTransaction(transactionBody.AccountID, transactionBody.OperationTypeID, transactionBody.Amount)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to create transaction",
@@ -48,5 +48,5 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, transaction)
+	c.Status(http.StatusOK)
 }

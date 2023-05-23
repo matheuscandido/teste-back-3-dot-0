@@ -6,7 +6,7 @@ import (
 )
 
 type TransactionUseCase interface {
-	CreateTransaction(accountID int, operationTypeID int, amount float64) (*entities.Transaction, error)
+	CreateTransaction(accountID int, operationTypeID int, amount float64) error
 }
 
 type transactionUseCase struct {
@@ -19,7 +19,7 @@ func NewTransactionUseCase(transactionRepository persistence.TransactionReposito
 	}
 }
 
-func (uc *transactionUseCase) CreateTransaction(accountID int, operationTypeID int, amount float64) (*entities.Transaction, error) {
+func (uc *transactionUseCase) CreateTransaction(accountID int, operationTypeID int, amount float64) error {
 	// validate input
 	transaction := &entities.Transaction{
 		AccountID:       accountID,
@@ -28,10 +28,10 @@ func (uc *transactionUseCase) CreateTransaction(accountID int, operationTypeID i
 	}
 
 	// use repository to interface with data layer
-	transaction, err := uc.transactionRepository.CreateTransaction(transaction)
+	err := uc.transactionRepository.CreateTransaction(transaction)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return transaction, nil
+	return nil
 }

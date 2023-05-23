@@ -3,6 +3,7 @@ package persistence
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"mcandido.com/teste-pismo/internal/entities"
 
@@ -15,7 +16,7 @@ type AccountRepository interface {
 }
 
 type TransactionRepository interface {
-	CreateTransaction(transaction *entities.Transaction) (*entities.Transaction, error)
+	CreateTransaction(transaction *entities.Transaction) error
 }
 
 const (
@@ -50,8 +51,21 @@ func NewDatabase() (*Database, error) {
 }
 
 func (db *Database) CreateAccount(account *entities.Account) (*entities.Account, error) {
+	stm := `INSERT INTO accounts (document_number) values ($1)`
+	_, err := db.DB.Exec(stm, account.DocumentNumber)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	newAcc := entities.Account{}
+
+	err = db.DB.QueryRow("SELECT id, document_number FROM accounts where document_number = ?", account.DocumentNumber).
+		Scan(newAcc.AccountID, newAcc.DocumentNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	return &newAcc, nil
 }
 
 func (db *Database) FindAccountByID(id int) (*entities.Account, error) {
@@ -67,6 +81,12 @@ func (db *Database) FindAccountByID(id int) (*entities.Account, error) {
 	return account, nil
 }
 
-func (db *Database) CreateTransaction(transaction *entities.Transaction) (*entities.Transaction, error) {
-	return nil, nil
+func (db *Database) CreateTransaction(transaction *entities.Transaction) error {
+	stm := `INSERT INTO transactions (account_id, operation_type_id, amount, event_date) values ($1, $2, $3, $4)`
+	_, err := db.DB.Exec(stm, transaction.AccountID, transaction.OperationTypeID, transaction.Amount, time.Now().UTC().Format(time.RFC3339))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
