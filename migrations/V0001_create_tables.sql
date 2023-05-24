@@ -8,6 +8,11 @@ CREATE TABLE IF NOT EXISTS operations_types (
     description varchar(255) unique not null
 );
 
+INSERT INTO operations_types (description) values('COMPRA A VISTA');
+INSERT INTO operations_types (description) values('COMPRA PARCELADA');
+INSERT INTO operations_types (description) values('SAQUE');
+INSERT INTO operations_types (description) values('PAGAMENTO');
+
 CREATE TABLE IF NOT EXISTS transactions (
     id serial primary key,
     account_id int not null,
