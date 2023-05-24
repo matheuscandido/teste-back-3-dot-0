@@ -6,6 +6,12 @@ Implementação do teste de backend da Pismo.
 
 A forma recomendada de executar o projeto é através do `docker compose`.
 
+```bash
+docker compose up -d
+```
+
+O projeto executa automaticamente as migrações presentes no diretório `/migrations` da raiz.
+
 ### Executando via Docker
 
 Construir a imagem:
