@@ -7,6 +7,9 @@ import (
 
 	"mcandido.com/teste-pismo/internal/entities"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -38,11 +41,28 @@ func NewDatabase() (*Database, error) {
 		return nil, err
 	}
 
+	// ping db
 	err = db.Ping()
 	if err != nil {
 		return nil, err
 	}
 
+	// run migrations
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://../migrations",
+		"postgres", driver)
+	if err != nil {
+		return nil, err
+	}
+
+	m.Up()
+
+	// wrap up
 	database := &Database{
 		DB: db,
 	}
