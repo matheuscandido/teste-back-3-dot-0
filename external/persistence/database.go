@@ -36,7 +36,7 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	connectionString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		return nil, err
