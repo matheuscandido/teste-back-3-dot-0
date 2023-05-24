@@ -3,6 +3,7 @@ package persistence
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
 	"mcandido.com/teste-pismo/internal/entities"
@@ -22,12 +23,12 @@ type TransactionRepository interface {
 	CreateTransaction(transaction *entities.Transaction) error
 }
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "yourusername"
-	password = "yourpassword"
-	dbname   = "yourdbname"
+var (
+	host     = os.Getenv("DB_HOST")
+	port     = os.Getenv("DB_PORT")
+	user     = os.Getenv("DB_USER")
+	password = os.Getenv("DB_PASS")
+	dbname   = os.Getenv("DB_NAME")
 )
 
 type Database struct {

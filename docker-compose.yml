@@ -12,7 +12,7 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=yourusername
-      - DB_PASSWORD=yourpassword
+      - DB_PASS=yourpassword
       - DB_NAME=yourdbname
   db:
     image: postgres
