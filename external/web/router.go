@@ -18,13 +18,13 @@ func SetupRouter(accountsHandler handlers.AccountsHandler, transactionsHandler h
 
 	accounts := r.Group("/accounts")
 	{
-		accounts.POST("/", accountsHandler.CreateAccount)
-		accounts.GET("/:accountId", accountsHandler.GetAccount)
+		accounts.POST("", accountsHandler.CreateAccount)
+		accounts.GET("/:id", accountsHandler.GetAccount)
 	}
 
 	transactions := r.Group("/transactions")
 	{
-		transactions.POST("/", transactionsHandler.CreateTransaction)
+		transactions.POST("", transactionsHandler.CreateTransaction)
 	}
 
 	return r

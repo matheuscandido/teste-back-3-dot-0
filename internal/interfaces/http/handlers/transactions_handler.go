@@ -34,8 +34,7 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 
 	if err := validator.New().Struct(transactionBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":  "Invalid request body",
-			"fields": err.(validator.ValidationErrors),
+			"error": "Invalid request body",
 		})
 		return
 	}

@@ -51,29 +51,29 @@ func NewDatabase() (*Database, error) {
 }
 
 func (db *Database) CreateAccount(account *entities.Account) (*entities.Account, error) {
-	stm := `INSERT INTO accounts (document_number) values ($1)`
-	_, err := db.DB.Exec(stm, account.DocumentNumber)
+	_, err := db.DB.Exec(fmt.Sprintf("INSERT INTO accounts (document_number) values ('%s')", account.DocumentNumber))
 	if err != nil {
 		return nil, err
 	}
 
-	newAcc := entities.Account{}
+	newAcc := &entities.Account{}
 
-	err = db.DB.QueryRow("SELECT id, document_number FROM accounts where document_number = ?", account.DocumentNumber).
-		Scan(newAcc.AccountID, newAcc.DocumentNumber)
+	err = db.DB.
+		QueryRow("SELECT id, document_number FROM accounts where document_number = $1", account.DocumentNumber).
+		Scan(&newAcc.AccountID, &newAcc.DocumentNumber)
 	if err != nil {
 		return nil, err
 	}
 
-	return &newAcc, nil
+	return newAcc, nil
 }
 
 func (db *Database) FindAccountByID(id int) (*entities.Account, error) {
 	account := &entities.Account{}
 
 	err := db.DB.
-		QueryRow("SELECT id, document_number FROM accounts where id = ?", id).
-		Scan(account.AccountID, account.DocumentNumber)
+		QueryRow("SELECT id, document_number FROM accounts where id = $1", id).
+		Scan(&account.AccountID, &account.DocumentNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (db *Database) FindAccountByID(id int) (*entities.Account, error) {
 }
 
 func (db *Database) CreateTransaction(transaction *entities.Transaction) error {
-	stm := `INSERT INTO transactions (account_id, operation_type_id, amount, event_date) values ($1, $2, $3, $4)`
+	stm := `INSERT INTO transactions (account_id, operation_id, amount, event_date) values ($1, $2, $3, $4)`
 	_, err := db.DB.Exec(stm, transaction.AccountID, transaction.OperationTypeID, transaction.Amount, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
 		return err

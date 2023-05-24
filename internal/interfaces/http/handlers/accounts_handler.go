@@ -36,8 +36,7 @@ func (h *accountsHandler) CreateAccount(c *gin.Context) {
 
 	if err := validator.New().Struct(accountBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":  "Invalid request body",
-			"fields": err.(validator.ValidationErrors),
+			"error": "Invalid request body",
 		})
 		return
 	}
